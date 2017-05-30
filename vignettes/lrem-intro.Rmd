@@ -1,4 +1,4 @@
-de---
+---
 title: "Using the lrem package"
 author: "Ulugbek Nuritov"
 date: "`r Sys.Date()`"
