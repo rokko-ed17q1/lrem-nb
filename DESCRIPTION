@@ -1,0 +1,14 @@
+Package: lrem
+Title: Solving and simulating a class of LRE models
+Version: 0.0.0.9000
+Authors@R: person("Ulugbek", "Nuritov", email = "nuritovbek@yahoo.co.uk", role = c("aut", "cre"))
+Description: Solves for the recursive representation of the stable solution to a system of linear difference equations. Inputs are two square matrices E and A and a natural number n where E and A are the coefficient matrices of the difference equation Ex(t+1) = Ax(t). The output of the package are (currently) two functions g and h for the decision rule and the law of motion respectively.
+Depends: R (>= 3.3.2)
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+Suggests: knitr,
+    rmarkdown
+VignetteBuilder: knitr
+Imports: QZ
+RoxygenNote: 6.0.1

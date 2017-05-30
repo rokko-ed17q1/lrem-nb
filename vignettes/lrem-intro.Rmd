@@ -1,0 +1,81 @@
+de---
+title: "Using the lrem package"
+author: "Ulugbek Nuritov"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+This vignette documents how to use the lrem package to solve for a range of linear rational expectations models. Currently the package should solve linear difference models of autonomous type, with the assumption that there are no external shocks. 
+
+Essentially, the package contains several wrapper functions for objects in the QZ package so as to output solutions to LRE models according to Blanchard and Kahn(1980) or Klein(2000) methods.
+
+The main function to call is lre_auto however the package also contains 2 specific functions to directly get either the Klein or the Blanchard and Kahn solutions.
+
+## Using lre_auto
+
+The functions in the package call the coefficient matrices of the linearized difference equations.
+
+To get the dynamic behaviour of a given model it is first necessary to linearize it to obtain the following system of difference equations e.g. $E(x_{t+1}) = A(x_t)$ 
+
+The functions also require the number of predetermined variables in the system so as to decouple the system follwoing the QZ decomposition such that the non-predetermined variables depend only upon the unstable eigenvalues. 
+
+As an example, consider the following initial system:
+
+```{r, }
+A <- matrix(c(0.7,0,1.2,0.6363636,1.909091,0.1818182,0,-1,1), byrow=T, nrow=3)
+x0 <- 0.1
+E <- diag(1, nrow=3)
+```
+
+Then the lre_auto will give the Blanchard Kahn solution if E is ommitted in the call. Else it will give the Klein method solution:
+
+```{r}
+sim1 <- lrem::lre_auto(A, n = length(x0))
+sim2 <- lrem::lre_auto(A, E, n = length(x0))
+sim1
+sim2
+```
+
+Then for the following simulation code:
+
+```{r}
+simulate <- function(g, h, x0, t) {
+  n1 <- length(x0)
+  n2 <- length(g(x0))
+  
+  pre <- 1:n1
+  npr <- (n1 +1):(n1 + n2)
+  
+  out <- matrix(0,t, n1+n2)
+  
+  out[1,pre] <- x0
+  out[1, npr] <- g(x0)
+  
+  for (i in 1:(t-1)) {
+    out[i + 1, pre] <- h(out[i, pre])
+    out[i + 1, npr] <- g(out[i + 1, pre])
+  }
+  out
+}
+
+```
+
+Simulating the output of lre_auto will give:
+
+```{r}
+out1 <- simulate(sim1[[1]],sim1[[2]],x0,100)
+plot(out1[,1])
+```
+
+For the Blanchard and Kahn methods' solution and
+
+```{r}
+out2 <- simulate(sim2[[1]],sim2[[2]],x0,100)
+plot(out1[,1])
+```
+
+For the Klein approach respectively.
