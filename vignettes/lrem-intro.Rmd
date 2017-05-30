@@ -26,7 +26,10 @@ The functions also require the number of predetermined variables in the system s
 As an example, consider the following initial system:
 
 ```{r, }
-A <- matrix(c(0.7,0,1.2,0.6363636,1.909091,0.1818182,0,-1,1), byrow=T, nrow=3)
+A <- matrix(c(0.7,        0,        1.2,
+              0.6363636,  1.909091, 0.1818182,
+              0,         -1,        1), 
+            byrow=T, nrow=3)
 x0 <- 0.1
 E <- diag(1, nrow=3)
 ```
